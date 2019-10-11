@@ -27,7 +27,7 @@ public class AuthorizeController {
     @Value("${github.redirect_uri}")
     private String redirect_uri;
     @Autowired
-    Usermapper usermapper;
+    private Usermapper usermapper;
 
 
     @Autowired
@@ -54,6 +54,7 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             usermapper.insert(user);
             httpServletResponse.addCookie(new Cookie("token", token));
             return "redirect:/";
