@@ -2,10 +2,9 @@ package com.mmt.ltxm.controller;
 
 import com.mmt.ltxm.dto.AccessTokoenDTO;
 import com.mmt.ltxm.dto.GithubUser;
-import com.mmt.ltxm.mapper.Usermapper;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.provider.Githubprovider;
-import jdk.nashorn.internal.parser.Token;
+import com.mmt.ltxm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,9 +25,9 @@ public class AuthorizeController {
     private String client_secret;
     @Value("${github.redirect_uri}")
     private String redirect_uri;
-    @Autowired
-    private Usermapper usermapper;
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private Githubprovider githubprovider;
@@ -52,14 +51,21 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            usermapper.insert(user);
+            userService.createOrUpdate(user);
             httpServletResponse.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
+        httpServletRequest.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
+        return "redirect:/";
     }
 }

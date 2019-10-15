@@ -1,9 +1,10 @@
 package com.mmt.ltxm;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@MapperScan("com.mmt.ltxm.mapper")
+@MapperScan("com.mmt.ltxm.mapper")
 @SpringBootApplication
 public class LtxmApplication {
 
