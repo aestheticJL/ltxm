@@ -1,6 +1,6 @@
 package com.mmt.ltxm.HandlerInterceptors;
 
-import com.mmt.ltxm.mapper.Usermapper;
+import com.mmt.ltxm.mapper.UserMapper;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
-    private Usermapper usermapper;
+    private UserMapper usermapper;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();

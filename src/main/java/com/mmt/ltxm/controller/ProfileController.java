@@ -32,7 +32,7 @@ public class ProfileController {
             return "redirecti:/";
         }
 
-        List<QuestionDTO> MyQuestion = qusetionservice.list(user.getId(), model, start, size);
+        List<QuestionDTO> MyQuestion = qusetionservice.listById(user.getId(), model, start, size);
         model.addAttribute("MyQuestion", MyQuestion);
         return "profile";
     }

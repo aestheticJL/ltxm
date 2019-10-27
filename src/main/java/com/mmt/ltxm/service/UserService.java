@@ -1,6 +1,6 @@
 package com.mmt.ltxm.service;
 
-import com.mmt.ltxm.mapper.Usermapper;
+import com.mmt.ltxm.mapper.UserMapper;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    private Usermapper usermapper;
+    private UserMapper usermapper;
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();

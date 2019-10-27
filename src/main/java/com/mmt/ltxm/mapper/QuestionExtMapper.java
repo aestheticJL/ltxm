@@ -1,4 +1,9 @@
 package com.mmt.ltxm.mapper;
 
-public class QuestionExtMapper {
+import com.mmt.ltxm.model.Question;
+
+import java.util.List;
+
+public interface QuestionExtMapper {
+    List<Question> selectRelated(Question question);
 }
