@@ -6,4 +6,7 @@ import java.util.List;
 
 public interface QuestionExtMapper {
     List<Question> selectRelated(Question question);
+
+    List<Question> countBySearch(String search);
+
 }

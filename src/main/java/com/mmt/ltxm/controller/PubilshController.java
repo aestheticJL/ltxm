@@ -1,9 +1,11 @@
 package com.mmt.ltxm.controller;
 
+import com.mmt.ltxm.cache.TagCache;
 import com.mmt.ltxm.dto.QuestionDTO;
 import com.mmt.ltxm.model.Question;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.service.Qusetionservice;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +22,8 @@ public class PubilshController {
     private Qusetionservice qusetionservice;
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -47,6 +50,11 @@ public class PubilshController {
             model.addAttribute("error", "标签不能为空");
             return "publish";
         }
+        String invalid = TagCache.filterInvalid(tag);
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "非法标签" + invalid);
+            return "publish";
+        }
         User user = (User) httpServletRequest.getSession().getAttribute("user");
         if (user == null) {
             model.addAttribute("error", "用户未登录");
@@ -58,6 +66,7 @@ public class PubilshController {
         question.setDescription(description);
         question.setId(id);
         qusetionservice.createOrUpdate(question, user);
+        model.addAttribute("tags", TagCache.get());
         return "redirect:/";
     }
 
@@ -68,6 +77,7 @@ public class PubilshController {
         model.addAttribute("tag", question.getTag());
         model.addAttribute("description", question.getDescription());
         model.addAttribute("id", question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 

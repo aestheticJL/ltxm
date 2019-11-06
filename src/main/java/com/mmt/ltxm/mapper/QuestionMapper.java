@@ -2,7 +2,9 @@ package com.mmt.ltxm.mapper;
 
 import com.mmt.ltxm.model.Question;
 import com.mmt.ltxm.model.QuestionExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
@@ -124,8 +126,13 @@ public interface QuestionMapper {
     int updateByPrimaryKey(Question record);
 
     @Update("update question set view_count = view_count + #{viewCount} where id = #{id}")
-    void updateViewCount(@Param("id") Long id,@Param("viewCount") Integer viewCount);
+    void updateViewCount(@Param("id") Long id, @Param("viewCount") Integer viewCount);
+
     @Update("update question set comment_count = comment_count + #{CommentCount} where id = #{id}")
     void
-    updateCommentCount(@Param("id") Long id,@Param("CommentCount") Integer CommentCount);
+    updateCommentCount(@Param("id") Long id, @Param("CommentCount") Integer CommentCount);
+
+    @Update("update question set GMT_MODIFIED = #{gmtModified} where id = #{id}")
+    void
+    updateGmtModified(@Param("id")Long id, @Param("gmtModified")Long gmtModified);
 }

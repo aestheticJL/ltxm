@@ -35,9 +35,17 @@ public class Qusetionservice {
     private QuestionExtMapper questionExtMapper;
 
 
-    public List<QuestionDTO> listById(Model model, @RequestParam(value = "start", defaultValue = "1") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+    public List<QuestionDTO> listById(Model model,
+                                      @RequestParam(value = "start", defaultValue = "1") int start,
+                                      @RequestParam(value = "size", defaultValue = "5") int size,
+                                      String search) {
         PageHelper.startPage(start, size, "gmt_modified desc");
-        List<Question> questions = questionmapper.selectByExample(new QuestionExample());
+        List<Question> questions;
+        if (StringUtils.isNotBlank(search)) {
+            String[] split = StringUtils.split(search, " ");
+            search = Arrays.stream(split).collect(Collectors.joining("|"));
+        }
+        questions = questionExtMapper.countBySearch(search);
         PageInfo<Question> page = new PageInfo<>(questions);
         List pagelist = new ArrayList();
         for (int i = 1; i <= page.getPages(); i++) {
@@ -66,7 +74,6 @@ public class Qusetionservice {
         for (int i = 1; i <= page.getPages(); i++) {
             pagelist.add(i);
         }
-        System.out.println(page);
         model.addAttribute("pagelist", pagelist);
         model.addAttribute("page", page);
         List<QuestionDTO> questionDTOlist = new ArrayList();
@@ -109,7 +116,7 @@ public class Qusetionservice {
             updateQuestion.setDescription(question.getDescription());
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria().andIdEqualTo(question.getId());
-            int updat = questionmapper.updateByExampleSelective(question, questionExample);
+            int updat = questionmapper.updateByExampleSelective(updateQuestion, questionExample);
             if (updat != 1) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
@@ -133,7 +140,7 @@ public class Qusetionservice {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO questionDTO) {
-        if(StringUtils.isBlank(questionDTO.getTag())){
+        if (StringUtils.isBlank(questionDTO.getTag())) {
             return new ArrayList<>();
         }
         String[] split = StringUtils.split(questionDTO.getTag(), ",");
@@ -142,10 +149,10 @@ public class Qusetionservice {
         question.setId(questionDTO.getId());
         question.setTag(collect);
 
-        List<Question> questions = questionmapper.selectRelated(question);
+        List<Question> questions = questionExtMapper.selectRelated(question);
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO1 = new QuestionDTO();
-            BeanUtils.copyProperties(q,questionDTO1);
+            BeanUtils.copyProperties(q, questionDTO1);
             return questionDTO1;
         }).collect(Collectors.toList());
 

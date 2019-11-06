@@ -2,9 +2,12 @@ package com.mmt.ltxm.service;
 
 import com.mmt.ltxm.dto.CommentDTO;
 import com.mmt.ltxm.enums.CommentTypeEnum;
+import com.mmt.ltxm.enums.NotificationEnum;
+import com.mmt.ltxm.enums.NotificationStatusEnum;
 import com.mmt.ltxm.exception.CustomizeErrorCode;
 import com.mmt.ltxm.exception.CustomizeException;
 import com.mmt.ltxm.mapper.CommentMapper;
+import com.mmt.ltxm.mapper.NotificationMapper;
 import com.mmt.ltxm.mapper.QuestionMapper;
 import com.mmt.ltxm.mapper.UserMapper;
 import com.mmt.ltxm.model.*;
@@ -27,8 +30,11 @@ public class CommentService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Transactional
-    public void insert(Comment comment, User user) {
+    public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -42,9 +48,16 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
-
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+            comment.setCommentCount(0);
             commentMapper.insert(comment);
             commentMapper.updateCommentCount(comment.getParentId(), 1);
+            questionMapper.updateGmtModified(dbComment.getParentId(),System.currentTimeMillis());
+            //通知
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationEnum.REPLY_QUESTION, question.getId());
         } else {
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if (question == null) {
@@ -52,7 +65,28 @@ public class CommentService {
             }
             commentMapper.insert(comment);
             questionMapper.updateCommentCount(question.getId(), 1);
+            questionMapper.updateGmtModified(comment.getParentId(),System.currentTimeMillis());
+            //通知
+            createNotify(comment, question.getCreator(), commentator.getName(),question.getTitle(),NotificationEnum.REPLY_QUESTION, question.getId());
         }
+    }
+
+    private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationEnum notificationType, Long outerId) {
+        if (receiver.equals(comment.getCommentator())) {
+
+            return;
+        }
+
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(notificationType.getType());
+        notification.setOuterid(outerId);
+        notification.setNotifier(comment.getCommentator());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> listByQuestionId(Long id, CommentTypeEnum type) {

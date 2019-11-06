@@ -17,9 +17,14 @@ public class IndexController {
     private Qusetionservice qusetionservice;
 
     @GetMapping("/")
-    public String index(HttpServletRequest httpServletRequest, Model model, @RequestParam(value = "start", defaultValue = "1") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
-        List<QuestionDTO> questionDTOS = qusetionservice.listById(model, start, size);
+    public String index(Model model,
+                        @RequestParam(value = "start", defaultValue = "1") Integer start,
+                        @RequestParam(value = "size", defaultValue = "5") Integer size,
+                        @RequestParam(value = "search", required = false) String search
+    ) {
+        List<QuestionDTO> questionDTOS = qusetionservice.listById(model, start, size,search);
         model.addAttribute("questionDTOS", questionDTOS);
+        model.addAttribute("search", search);
         return "index";
     }
 }

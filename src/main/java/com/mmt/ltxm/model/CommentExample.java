@@ -325,52 +325,52 @@ public class CommentExample {
         }
 
         public Criteria andTypeEqualTo(Integer value) {
-            addCriterion("TYPE =", value, "type");
+            addCriterion("TYPE =", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotEqualTo(Integer value) {
-            addCriterion("TYPE <>", value, "type");
+            addCriterion("TYPE <>", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeGreaterThan(Integer value) {
-            addCriterion("TYPE >", value, "type");
+            addCriterion("TYPE >", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("TYPE >=", value, "type");
+            addCriterion("TYPE >=", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeLessThan(Integer value) {
-            addCriterion("TYPE <", value, "type");
+            addCriterion("TYPE <", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("TYPE <=", value, "type");
+            addCriterion("TYPE <=", value, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeIn(List<Integer> values) {
-            addCriterion("TYPE in", values, "type");
+            addCriterion("TYPE in", values, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotIn(List<Integer> values) {
-            addCriterion("TYPE not in", values, "type");
+            addCriterion("TYPE not in", values, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeBetween(Integer value1, Integer value2) {
-            addCriterion("TYPE between", value1, value2, "type");
+            addCriterion("TYPE between", value1, value2, "typeName");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("TYPE not between", value1, value2, "type");
+            addCriterion("TYPE not between", value1, value2, "typeName");
             return (Criteria) this;
         }
 
