@@ -2,7 +2,6 @@ package com.mmt.ltxm.controller;
 
 import com.mmt.ltxm.dto.NotificationDTO;
 import com.mmt.ltxm.dto.QuestionDTO;
-import com.mmt.ltxm.model.Notification;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.service.NotificationService;
 import com.mmt.ltxm.service.Qusetionservice;

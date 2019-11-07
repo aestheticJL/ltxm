@@ -9,20 +9,19 @@ import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
 import com.qcloud.cos.http.HttpMethodName;
-import com.qcloud.cos.model.*;
+import com.qcloud.cos.model.GeneratePresignedUrlRequest;
+import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.region.Region;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.Date;
 import java.util.UUID;
-
+@Slf4j
 @Service
 public class TencentCloudProvider {
     @Value("${TencentCloud.SECRETID}")
@@ -62,11 +61,14 @@ public class TencentCloudProvider {
             cosClient.shutdown();
             return downloadUrl.toString();
         } catch (CosServiceException serverException) {
+            log.error("upload error,{}");
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (CosClientException clientException) {
             clientException.printStackTrace();
+            log.error("upload error,{}", fileName, clientException);
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } catch (IOException e) {
+            log.error("upload error,{}", fileName, e);
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         }
     }

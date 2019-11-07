@@ -5,6 +5,7 @@ import com.mmt.ltxm.dto.GithubUser;
 import com.mmt.ltxm.model.User;
 import com.mmt.ltxm.provider.Githubprovider;
 import com.mmt.ltxm.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 
 @Controller
+@Slf4j
 public class AuthorizeController {
     @Value("${github.client_id}")
     private String client_id;
@@ -55,6 +57,7 @@ public class AuthorizeController {
             httpServletResponse.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
+            log.error("callback get github error,{}", githubUser);
             return "redirect:/";
         }
     }
