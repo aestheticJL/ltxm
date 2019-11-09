@@ -57,7 +57,6 @@ public class AuthorizeController {
             httpServletResponse.addCookie(new Cookie("token", token));
             return "redirect:/";
         } else {
-            log.error("callback get github error,{}", githubUser);
             return "redirect:/";
         }
     }
