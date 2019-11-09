@@ -147,10 +147,14 @@
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
+                    <include>**/*.*</include>
                 </includes>
-                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
             </resource>
         </resources>
         <plugins>
@@ -163,6 +167,17 @@
                     <fork>true</fork>
                 </configuration>
             </plugin>
+
+            <!--执行测试用例的插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--跳过项目运行测试用例-->
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
 
             <plugin>
                 <groupId>org.flywaydb</groupId>
@@ -193,12 +208,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            <!--&lt;!&ndash; com.github.pagehelper为PageHelper类所在包名 &ndash;&gt;-->
-            <!--<plugin interceptor="com.github.pagehelper.PageInterceptor">-->
-            <!--&lt;!&ndash; 使用下面的方式配置参数，后面会有所有的参数介绍 &ndash;&gt;-->
-            <!--<property name="supportMethodsArguments" value="true"/>-->
-            <!--<property name="params" value="pageNum=pageNumKey;pageSize=pageSizeKey;"/>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 
