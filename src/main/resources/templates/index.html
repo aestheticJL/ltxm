@@ -48,26 +48,26 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li>
-                        <a th:href="@{/(start=${1},search=${search})}" aria-label="Previous">
+                        <a th:href="@{/(start=${1},search=${search},tag=${tag})}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li>
-                        <a th:href="@{/(start=${page.pageNum - 1},search=${search})}" aria-label="Previous">
+                        <a th:href="@{/(start=${page.pageNum - 1},search=${search},tag=${tag})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li th:each="pagetitle : ${pagelist}" th:class="${page.pageNum == pagetitle }? 'active':''">
-                        <a th:href="@{/(start=${pagetitle},search=${search})}" th:text="${pagetitle}">
+                        <a th:href="@{/(start=${pagetitle},search=${search},tag=${tag})}" th:text="${pagetitle}">
                         </a>
                     </li>
                     <li>
-                        <a th:href="@{/(start=${page.pageNum + 1},search=${search})}" aria-label="Next">
+                        <a th:href="@{/(start=${page.pageNum + 1},search=${search},tag=${tag})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li>
-                        <a th:href="@{/(start=${page.pages},search=${search})}" aria-label="Next">
+                        <a th:href="@{/(start=${page.pages},search=${search},tag=${tag})}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -79,6 +79,16 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <img src="/images/wechat.jpg" class="img-thumbnail question-wechat">
                 <h4>扫码添加</h4>
+            </div>
+
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4>热门话题</h4>
+                <ul class="question-related">
+                    <li th:each="tag : ${hotTags}">
+                        <a th:href="@{/(page=1,tag=${tag},search=${search})}"  th:text="${tag}"></a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

@@ -35,17 +35,17 @@ public class Qusetionservice {
     private QuestionExtMapper questionExtMapper;
 
 
-    public List<QuestionDTO> listById(Model model,
-                                      @RequestParam(value = "start", defaultValue = "1") int start,
-                                      @RequestParam(value = "size", defaultValue = "5") int size,
-                                      String search) {
+    public List<QuestionDTO> list(Model model,
+                                  @RequestParam(value = "start", defaultValue = "1") int start,
+                                  @RequestParam(value = "size", defaultValue = "5") int size,
+                                  @RequestParam(value = "search", required = false) String search,
+                                  String tag) {
         PageHelper.startPage(start, size, "gmt_modified desc");
-        List<Question> questions;
         if (StringUtils.isNotBlank(search)) {
             String[] split = StringUtils.split(search, " ");
             search = Arrays.stream(split).collect(Collectors.joining("|"));
         }
-        questions = questionExtMapper.countBySearch(search);
+        List<Question> questions = questionExtMapper.selectBySearch(search,tag);
         PageInfo<Question> page = new PageInfo<>(questions);
         List pagelist = new ArrayList();
         for (int i = 1; i <= page.getPages(); i++) {
@@ -64,7 +64,7 @@ public class Qusetionservice {
         return questionDTOlist;
     }
 
-    public List<QuestionDTO> listById(Long userId, Model model, @RequestParam(value = "start", defaultValue = "1") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
+    public List<QuestionDTO> list(Long userId, Model model, @RequestParam(value = "start", defaultValue = "1") int start, @RequestParam(value = "size", defaultValue = "5") int size) {
         PageHelper.startPage(start, size, "gmt_modified desc");
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
@@ -124,10 +124,10 @@ public class Qusetionservice {
     }
 
     public void incView(Long id) {
+
 //        Question question = questionmapper.selectByPrimaryKey(id);
 //        question.setViewCount(question.getViewCount()+1);
 //        questionmapper.updateByPrimaryKey(question);
-
 
 //        Question updateQuestion = new Question();
 //        Question question = questionmapper.selectByPrimaryKey(id);
@@ -140,9 +140,11 @@ public class Qusetionservice {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO questionDTO) {
+
         if (StringUtils.isBlank(questionDTO.getTag())) {
             return new ArrayList<>();
         }
+
         String[] split = StringUtils.split(questionDTO.getTag(), ",");
         String collect = Arrays.stream(split).collect(Collectors.joining("|"));
         Question question = new Question();
@@ -150,6 +152,7 @@ public class Qusetionservice {
         question.setTag(collect);
 
         List<Question> questions = questionExtMapper.selectRelated(question);
+
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO1 = new QuestionDTO();
             BeanUtils.copyProperties(q, questionDTO1);

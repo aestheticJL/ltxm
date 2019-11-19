@@ -12,7 +12,7 @@
         <result column="LIKE_COUNT" jdbcType="INTEGER" property="likeCount"/>
         <result column="TAG" jdbcType="VARCHAR" property="tag"/>
     </resultMap>
-    
+
     <select id="selectRelated" parameterType="com.mmt.ltxm.model.Question" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
@@ -26,12 +26,15 @@
         order by gmt_create desc limit 20
     </select>
 
-    <select id="countBySearch" parameterType="com.mmt.ltxm.model.Question" resultMap="BaseResultMap">
+    <select id="selectBySearch" parameterType="com.mmt.ltxm.model.Question" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
-        <if test="search != null and search != ''">
-            and title regexp #{search}
-        </if>
+            <if test="search != null and search != ''">
+                and title regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag regexp #{tag}
+            </if>
         </where>
     </select>
 

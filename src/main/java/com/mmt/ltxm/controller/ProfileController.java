@@ -30,7 +30,7 @@ public class ProfileController {
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
-            List<QuestionDTO> MyQuestion = qusetionservice.listById(user.getId(), model, start, size);
+            List<QuestionDTO> MyQuestion = qusetionservice.list(user.getId(), model, start, size);
             model.addAttribute("MyQuestion", MyQuestion);
         } else if ("replies".equals(action)) {
             List<NotificationDTO> notificationDTOS = notificationService.listById(user.getId(), model, start, size);

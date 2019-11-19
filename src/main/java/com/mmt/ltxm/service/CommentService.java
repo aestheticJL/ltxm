@@ -55,7 +55,7 @@ public class CommentService {
             comment.setCommentCount(0);
             commentMapper.insert(comment);
             commentMapper.updateCommentCount(comment.getParentId(), 1);
-            questionMapper.updateGmtModified(dbComment.getParentId(),System.currentTimeMillis());
+            questionMapper.updateGmtModified(dbComment.getParentId(), System.currentTimeMillis());
             //通知
             createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationEnum.REPLY_QUESTION, question.getId());
         } else {
@@ -65,9 +65,9 @@ public class CommentService {
             }
             commentMapper.insert(comment);
             questionMapper.updateCommentCount(question.getId(), 1);
-            questionMapper.updateGmtModified(comment.getParentId(),System.currentTimeMillis());
+            questionMapper.updateGmtModified(comment.getParentId(), System.currentTimeMillis());
             //通知
-            createNotify(comment, question.getCreator(), commentator.getName(),question.getTitle(),NotificationEnum.REPLY_QUESTION, question.getId());
+            createNotify(comment, question.getCreator(), commentator.getName(), question.getTitle(), NotificationEnum.REPLY_QUESTION, question.getId());
         }
     }
 
@@ -103,14 +103,12 @@ public class CommentService {
         List<Long> userIds = new ArrayList();
         userIds.addAll(commentators);
 
-
         // 获取评论人并转换为 Map
         UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andIdIn(userIds);
         List<User> users = userMapper.selectByExample(userExample);
         Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
-
 
         // 转换 comment 为 commentDTO
         List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
