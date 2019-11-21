@@ -28,8 +28,7 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table  tableName="notification" domainObjectName="Notification">
-        </table>
-
+        <table  tableName="nav" domainObjectName="Nav"></table>
+        <table  tableName="ad" domainObjectName="Ad"></table>
     </context>
 </generatorConfiguration>
